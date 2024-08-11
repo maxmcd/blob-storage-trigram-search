@@ -17,7 +17,7 @@ func main() {
 	}
 	err = dump.PopulateDB()
 	if err != nil {
-		log.Fatal(err)
+		log.Panicln(err)
 	}
 	reader, err := dump.NewStreamReader("simplewiki-latest-pages-articles-multistream.xml.bz2")
 	if err != nil {
@@ -25,17 +25,17 @@ func main() {
 	}
 	ib, err := zoekt.NewIndexBuilder(&zoekt.Repository{})
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 
 	for reader.Next() {
 		b, err := reader.Read()
 		if err != nil {
-			log.Fatal(err)
+			log.Panicln(err)
 		}
 		pages, err := wikidump.ParseStream(b)
 		if err != nil {
-			log.Fatal(err)
+			log.Panicln(err)
 		}
 		for _, page := range pages {
 			ib.Add(zoekt.Document{
@@ -46,7 +46,7 @@ func main() {
 		}
 	}
 
-	f, err := os.Create("wiki.index")
+	f, err := os.Create("../../wiki.index")
 	if err != nil {
 		log.Panicln(err)
 	}
